@@ -60,7 +60,7 @@ services:
     networks:
       - presensi
 
-###### 1. Tata Boga #######
+###### WEB B.1 #######
   presensiwebtbg:
     build:
       context: .
@@ -96,7 +96,7 @@ services:
     networks:
       - presensi
 
-###### 2. Tata Busana #######
+###### WEB B.2 #######
   presensiwebtbs:
     build:
       context: .
@@ -132,7 +132,7 @@ services:
     networks:
       - presensi
 
-###### 3. Usaha Layanan Pariwisata #######
+###### WEB B.3 #######
   presensiwebulp:
     build:
       context: .
@@ -168,7 +168,7 @@ services:
     networks:
       - presensi
 
-###### 4. Akuntansi Keuangan dan Lembaga #######
+###### WEB B.4 #######
   presensiwebakl:
     build:
       context: .
