@@ -46,7 +46,11 @@ docker-compose -f docker-compose_MultiDB.yaml -p 'lampp' down -v --remove-orphan
 
 ## RUN
 ```
-WEB [A]  -->  http://ip-address:2525 
-WEB [B]  -->  http://ip-address:2525 
+PHPMyAdmin WEB       -->  http://ip-address:1555 
+WEB           [A]    -->  http://ip-address:1525 
+WEB           [B.1]  -->  http://ip-address:1510
+WEB           [B.2]  -->  http://ip-address:1520
+WEB           [B.3]  -->  http://ip-address:1530
+WEB           [B.4]  -->  http://ip-address:1540 
 ```
 
