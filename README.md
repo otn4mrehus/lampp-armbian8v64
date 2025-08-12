@@ -1,2 +1,19 @@
-# lampp-armbian8v64
-Lampp Armbian 
+# Lampp-Armbian8v64
+## Container
+````
++ Single Web [A]
+    Web [A]  
+    DB  [A]  --------------------->    ------------------------------
++ Multi Web [B]                        |                            |
+  - Web B.1                            |                            |
+    DB  B.1  --------------------->    |                            |
+  - Web B.2                            |             (1)            |
+    DB  B.2  --------------------->    |         PHPMyAdmin         |
+  - Web B.3                            |       (ALL-Database)       |
+    DB  B.3  --------------------->    |                            |
+  - Web B.4                            |                            |
+    DB  B.4  --------------------->    ------------------------------
+
+     
+````
+## 
