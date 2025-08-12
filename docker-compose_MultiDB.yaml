@@ -1,0 +1,210 @@
+version: '2.2'
+services:
+
+###### WEB PUSAT #######
+  webpusat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webpusat
+    restart: always
+    ports:
+      - "1525:80"
+      - "15252:22"
+    volumes:
+      - /root/lampp/PUSAT/web:/var/www/html:rw
+    depends_on:
+      - dbpusat
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+###### MYSQL PUSAT #######
+  dbpusat:
+    image: bitnami/mysql:5.7
+    container_name: dbpusat
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - /root/lampp/PUSAT/db:/var/lib/mysql
+    ports:
+      - "1535:3306"
+    mem_limit: 128m
+    cpus: 1.0
+    networks:
+      - presensi
+
+
+###### 0. PHPMyAdmin ALL Database #######
+  phpmyadminpusat:
+    image: phpmyadmin:5.2
+    container_name: phpmyadminpusat
+    restart: always
+    depends_on:
+      - presensidbtbg
+      - presensidbtbs
+      - presensidbulp
+      - presensidbakl
+      - dbpusat
+    ports:
+      - "1555:80"
+    environment:
+      #PMA_ARBITRARY: 1   # Aktifkan akses ke banyak host
+      PMA_HOSTS: presensidbtbg,presensidbtbs,presensidbulp,presensidbakl,dbpusat
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+###### 1. Tata Boga #######
+  presensiwebtbg:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presensiwebtbg
+    restart: always
+    ports:
+      - "1510:80"
+      - "15210:22"
+    volumes:
+      - /root/lampp/presensi/TBG/web:/var/www/html:rw
+    depends_on:
+      - presensidbtbg
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+  presensidbtbg:
+    image: bitnami/mysql:5.7
+    container_name: presensidbtbg
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - /root/lampp/presensi/TBG/db:/var/lib/mysql
+    ports:
+      - "1512:3306"
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+###### 2. Tata Busana #######
+  presensiwebtbs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presensiwebtbs
+    restart: always
+    ports:
+      - "1520:80"
+      - "15220:22"
+    volumes:
+      - /root/lampp/presensi/TBS/web:/var/www/html
+    depends_on:
+      - presensidbtbs
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+  presensidbtbs:
+    image: bitnami/mysql:5.7
+    container_name: presensidbtbs
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - /root/lampp/presensi/TBS/db:/var/lib/mysql
+    ports:
+      - "1522:3306"
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+###### 3. Usaha Layanan Pariwisata #######
+  presensiwebulp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presensiwebulp
+    restart: always
+    ports:
+      - "1530:80"
+      - "15230:22"
+    volumes:
+      - /root/lampp/presensi/ULP/web:/var/www/html
+    depends_on:
+      - presensidbulp
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+  presensidbulp:
+    image: bitnami/mysql:5.7
+    container_name: presensidbulp
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - /root/lampp/presensi/ULP/db:/var/lib/mysql
+    ports:
+      - "1532:3306"
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+###### 4. Akuntansi Keuangan dan Lembaga #######
+  presensiwebakl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presensiwebakl
+    restart: always
+    ports:
+      - "1540:80"
+      - "15240:22"
+    volumes:
+      - /root/lampp/presensi/AKL/web:/var/www/html
+    depends_on:
+      - presensidbakl
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+  presensidbakl:
+    image: bitnami/mysql:5.7
+    container_name: presensidbakl
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - /root/lampp/presensi/AKL/db:/var/lib/mysql
+    ports:
+      - "1542:3306"
+    mem_limit: 256m
+    cpus: 1.0
+    networks:
+      - presensi
+
+
+networks:
+  presensi:
+    driver: bridge
