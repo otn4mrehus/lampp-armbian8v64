@@ -27,6 +27,11 @@ docker-compose -f docker-compose_MultiDB.yaml -p 'lampp' up --build -d
 ```
 
 ## Manage Container
+#### Rebuild (1 container)
+```
+docker-compose -f tkj.yaml -p presensi up -d --build --no-deps webpusat
+NB: MySQL Container (dbpusat) safe!!!
+```
 #### Start | Restart 
 ```
 docker-compose -f docker-compose_MultiDB.yaml -p 'lampp' restart 
