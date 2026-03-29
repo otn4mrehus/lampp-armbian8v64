@@ -1,0 +1,67 @@
+version: '2.2'
+
+services:
+  lampp7:    #### WEB ####
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lampp7
+    restart: unless-stopped
+    ports:
+      - "4141:80"
+    volumes:
+      - /root/web/lampp7/web:/var/www/html
+    depends_on:
+      - lampp7db
+    mem_limit: 740m
+    cpus: 1.0
+    networks:
+      - lampp7net
+
+  lampp7db:  #### DATABASE ####
+    image: mariadb:10.5.22
+    container_name: lampp7db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+      MYSQL_DATABASE: appdb
+    command: --sql_mode=""
+    volumes:
+      - /root/web/lampp7/db:/var/lib/mysql
+    mem_limit: 1024m
+    cpus: 1.0
+    networks:
+      - lampp7net
+
+  lampp7phpmyadmin:  #### PHPMYADMIN ####
+    image: phpmyadmin:5.2
+    container_name: lampp7phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - lampp7db
+    ports:
+      - "4142:80"
+    environment:
+      PMA_HOST: lampp7db
+    mem_limit: 256m
+    cpus: 0.6
+    networks:
+      - lampp7net
+
+  cloudflared:   #### CLOUDFLARE TUNNEL ####
+    image: cloudflare/cloudflared:latest
+    container_name: lampp7-cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=TULIS_TOKEN_DISINI!!!
+    depends_on:
+      - lampp7
+    networks:
+      - lampp7net
+
+networks:
+  lampp7net:
+    driver: bridge
